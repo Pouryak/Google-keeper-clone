@@ -1,16 +1,24 @@
 import React, { useState } from "react";
+import AddIcon from "@mui/icons-material/Add";
+import Fab from "@mui/material/Fab";
+import Zoom from "@mui/material/Zoom";
 
 function CreateArea(props) {
   const [note, setNote] = useState({
     title: "",
     content: "",
   });
+  const [focus, setFocus] = useState(false);
 
   function handleChange(e) {
     const { name, value } = e.target;
     setNote((prevNote) => {
       return { ...prevNote, [name]: value };
     });
+  }
+
+  function handleTextFocus() {
+    setFocus(true);
   }
 
   function addNote(e) {
@@ -26,21 +34,30 @@ function CreateArea(props) {
 
   return (
     <div>
-      <form>
-        <input
-          onChange={handleChange}
-          value={note.title}
-          name="title"
-          placeholder="Title"
-        />
+      <form className="create-note">
+        {focus && (
+          <input
+            name="title"
+            onChange={handleChange}
+            value={note.title}
+            placeholder="Title"
+          />
+        )}
+
         <textarea
+          name="content"
+          onClick={handleTextFocus}
           onChange={handleChange}
           value={note.content}
-          name="content"
           placeholder="Take a note..."
-          rows="3"
+          rows={focus ? "3" : "1"}
         />
-        <button onClick={addNote}>Add</button>
+
+        <Zoom in={focus}>
+          <Fab onClick={addNote}>
+            <AddIcon />
+          </Fab>
+        </Zoom>
       </form>
     </div>
   );
